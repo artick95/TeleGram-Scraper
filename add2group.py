@@ -58,7 +58,8 @@ with open(input_file, encoding='UTF-8') as f:
         user['id'] = int(row[1])
         user['access_hash'] = int(row[2])
         user['name'] = row[3]
-        users.append(user)
+        if("bot" not in user['username'] or "dm" not in user['name'] ):
+          users.append(user)
  
 chats = []
 last_date = None
@@ -87,18 +88,20 @@ for group in groups:
     i+=1
 
 print(gr+'[+] Choose a group to add members')
-g_index = input(gr+"[+] Enter a Number : "+re)
+#g_index = input(gr+"[+] Enter a Number : "+re)
+g_index=0
 target_group=groups[int(g_index)]
  
 target_group_entity = InputPeerChannel(target_group.id,target_group.access_hash)
  
 print(gr+"[1] add member by user ID\n[2] add member by username ")
-mode = int(input(gr+"Input : "+re)) 
+#mode = int(input(gr+"Input : "+re)) 
+mode=1
 n = 0
  
 for user in users:
     n += 1
-    if n % 50 == 0:
+    if n != 20:
 	    time.sleep(1)
 	    try:
 	        print ("Adding {}".format(user['id']))
@@ -115,6 +118,7 @@ for user in users:
 	        time.sleep(random.randrange(5, 10))
 	    except PeerFloodError:
 	        print(re+"[!] Getting Flood Error from telegram. \n[!] Script is stopping now. \n[!] Please try again after some time.")
+	        time.sleep(random.randrange(600, 1000))
 	    except UserPrivacyRestrictedError:
 	        print(re+"[!] The user's privacy settings do not allow you to do this. Skipping.")
 	    except:
